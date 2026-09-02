@@ -45,8 +45,8 @@ apiClient.interceptors.response.use(
 // ============================================================
 
 export const authService = {
-  login: (credentials) => apiClient.post('/auth/login', credentials),
-  register: (userData) => apiClient.post('/auth/register', userData),
+  login: (credentials) => apiClient.post('/api/auth/login', credentials),
+  register: (userData) => apiClient.post('/api/auth/register', userData),
   getCurrentUser: () => apiClient.get('/auth/me'),
 };
 
