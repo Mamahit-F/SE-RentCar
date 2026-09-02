@@ -112,7 +112,7 @@ export default function LoginPage() {
         ====================================================== */}
         <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 space-y-2.5">
           <p className="text-xs font-bold text-slate-300">
-            🔑 Akun Demo (Klik untuk isi cepat):
+            Silahkan Pilih Role:
           </p>
 
           <div className="grid grid-cols-2 gap-2">
@@ -122,13 +122,13 @@ export default function LoginPage() {
               type="button"
               onClick={() =>
                 fillDemoAccount(
-                  'user@rental.com',
-                  'user123'
+                  // 'user@rental.com',
+                  // 'user123'
                 )
               }
               className="text-xs font-semibold bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 p-2 rounded-xl border border-blue-500/20 transition text-center"
             >
-              User Demo
+              User
             </button>
 
             {/* PARTNER DEMO */}
@@ -136,8 +136,8 @@ export default function LoginPage() {
               type="button"
               onClick={() =>
                 fillDemoAccount(
-                  'partner@rental.com',
-                  'partner123'
+                  // 'partner@rental.com',
+                  // 'partner123'
                 )
               }
               className="text-xs font-semibold bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 p-2 rounded-xl border border-purple-500/20 transition text-center"
