@@ -2,7 +2,6 @@ package com.example.rentalpartnership.config;
 
 import com.example.rentalpartnership.security.CustomUserDetailsService;
 import com.example.rentalpartnership.security.JwtAuthenticationFilter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -24,12 +23,22 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final CorsConfigurationSource corsConfigurationSource;
     private final CustomUserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthFilter;
+
+    public SecurityConfig(
+            CorsConfigurationSource corsConfigurationSource,
+            CustomUserDetailsService userDetailsService,
+            JwtAuthenticationFilter jwtAuthFilter) {
+        this.corsConfigurationSource = corsConfigurationSource;
+        this.userDetailsService = userDetailsService;
+        this.jwtAuthFilter = jwtAuthFilter;
+    }
+
+    // lanjutkan kode @Bean kamu di bawah sini...
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -45,39 +54,92 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource))
             .csrf(AbstractHttpConfigurer::disable)
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+            .sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+
             .authorizeHttpRequests(auth -> auth
-                // Public endpoints
+
+                // ============================================================
+                // PUBLIC ENDPOINTS
+                // ============================================================
                 .requestMatchers(
-                    "/api/auth/**",
+                    "/health",
+                    "/health/**",
+                    "/api/health",
                     "/api/health/**",
+
+                    "/api/auth/**",
+
                     "/swagger-ui/**",
                     "/swagger-ui.html",
                     "/v3/api-docs/**"
                 ).permitAll()
-                // Public Discovery of Rentals and Cars
-                .requestMatchers(HttpMethod.GET, "/api/rentals", "/api/rentals/**", "/api/cars/**", "/api/reviews/rental/**").permitAll()
-                
-                // Role Specific Endpoints
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/partner/**").hasRole("PARTNER")
-                .requestMatchers("/api/bookings/**", "/api/payments/**", "/api/reviews/**").hasAnyRole("USER", "ADMIN")
-                .requestMatchers("/api/users/**").authenticated()
-                
-                // All other endpoints require authentication
-                .anyRequest().authenticated()
+
+                // ============================================================
+                // PUBLIC DISCOVERY - RENTALS, CARS, REVIEWS
+                // ============================================================
+                .requestMatchers(
+                    HttpMethod.GET,
+                    "/api/rentals",
+                    "/api/rentals/**",
+                    "/api/cars/**",
+                    "/api/reviews/rental/**"
+                ).permitAll()
+
+                // ============================================================
+                // ADMIN
+                // ============================================================
+                .requestMatchers("/api/admin/**")
+                .hasRole("ADMIN")
+
+                // ============================================================
+                // PARTNER
+                // ============================================================
+                .requestMatchers("/api/partner/**")
+                .hasRole("PARTNER")
+
+                // ============================================================
+                // USER / ADMIN
+                // ============================================================
+                .requestMatchers(
+                    "/api/bookings/**",
+                    "/api/payments/**",
+                    "/api/reviews/**"
+                )
+                .hasAnyRole("USER", "ADMIN")
+
+                // ============================================================
+                // AUTHENTICATED USERS
+                // ============================================================
+                .requestMatchers("/api/users/**")
+                .authenticated()
+
+                // ============================================================
+                // ALL OTHER ENDPOINTS
+                // ============================================================
+                .anyRequest()
+                .authenticated()
             )
+
             .authenticationProvider(authenticationProvider())
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+            .addFilterBefore(
+                jwtAuthFilter,
+                UsernamePasswordAuthenticationFilter.class
+            );
 
         return http.build();
     }
