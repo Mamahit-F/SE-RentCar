@@ -13,23 +13,76 @@ import java.util.List;
 @Configuration
 public class CorsConfig {
 
-    @Value("${cors.allowed-origins:http://localhost:5173,http://localhost:3000}")
+    @Value("${cors.allowed-origins}")
     private String allowedOrigins;
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+
         CorsConfiguration configuration = new CorsConfiguration();
-        
-        List<String> origins = Arrays.asList(allowedOrigins.split(","));
+
+        // ============================================================
+        // ALLOWED ORIGINS
+        // ============================================================
+
+        List<String> origins = Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim)
+                .filter(origin -> !origin.isEmpty())
+                .toList();
+
         configuration.setAllowedOrigins(origins);
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
-        configuration.setExposedHeaders(List.of("Authorization"));
+
+        // ============================================================
+        // ALLOWED METHODS
+        // ============================================================
+
+        configuration.setAllowedMethods(List.of(
+                "GET",
+                "POST",
+                "PUT",
+                "PATCH",
+                "DELETE",
+                "OPTIONS"
+        ));
+
+        // ============================================================
+        // ALLOWED HEADERS
+        // ============================================================
+
+        configuration.setAllowedHeaders(List.of("*"));
+
+        // ============================================================
+        // EXPOSED HEADERS
+        // ============================================================
+
+        configuration.setExposedHeaders(List.of(
+                "Authorization"
+        ));
+
+        // ============================================================
+        // CREDENTIALS
+        // ============================================================
+
         configuration.setAllowCredentials(true);
+
+        // ============================================================
+        // PREFLIGHT CACHE
+        // ============================================================
+
         configuration.setMaxAge(3600L);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        // ============================================================
+        // APPLY TO ALL ENDPOINTS
+        // ============================================================
+
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+
+        source.registerCorsConfiguration(
+                "/**",
+                configuration
+        );
+
         return source;
     }
 }
