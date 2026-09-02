@@ -112,7 +112,7 @@ export default function LoginPage() {
         ====================================================== */}
         <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 space-y-2.5">
           <p className="text-xs font-bold text-slate-300">
-            Silahkan Pilih Role:
+           Silahkan Masuk Akun
           </p>
 
           <div className="grid grid-cols-2 gap-2">
