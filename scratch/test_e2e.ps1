@@ -2,7 +2,7 @@ Write-Host "==========================================================" -Foregro
 Write-Host "AUTOMATED END-TO-END ACCEPTANCE TEST - SISTEM PARTNERSHIP RENTAL MOBIL" -ForegroundColor Cyan
 Write-Host "==========================================================" -ForegroundColor Cyan
 
-$baseUrl = "http://localhost:8080/api"
+$baseUrl = "https://se-rentcar-production.up.railway.app/api"
 
 function Assert-Equal($actual, $expected, $message) {
     if ("$actual" -eq "$expected") {

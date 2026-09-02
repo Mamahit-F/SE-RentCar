@@ -25,7 +25,7 @@ export default function Footer() {
               <li><Link to="/rentals" className="hover:text-white transition">Tempat Rental</Link></li>
               <li><Link to="/cars" className="hover:text-white transition">Armada Mobil</Link></li>
               <li><Link to="/register" className="hover:text-white transition">Daftar Jadi Mitra Rental</Link></li>
-              <li><a href="http://localhost:8080/swagger-ui/index.html" target="_blank" rel="noreferrer" className="hover:text-white transition">OpenAPI Swagger UI</a></li>
+              <li><a href="https://se-rentcar-production.up.railway.app" target="_blank" rel="noreferrer" className="hover:text-white transition">OpenAPI Swagger UI</a></li>
             </ul>
           </div>
 
