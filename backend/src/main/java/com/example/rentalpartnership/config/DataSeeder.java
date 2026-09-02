@@ -33,8 +33,8 @@ public class DataSeeder implements CommandLineRunner {
             // 1. Seed Admin
             User admin = User.builder()
                     .name("Administrator Utama")
-                //     .email("admin@rental.com")
-                //     .password(passwordEncoder.encode("admin123"))
+                    .email("admin@rental.com")
+                    .password(passwordEncoder.encode("admin123"))
                     .phone("081299990001")
                     .role(Role.ADMIN)
                     .isActive(true)
