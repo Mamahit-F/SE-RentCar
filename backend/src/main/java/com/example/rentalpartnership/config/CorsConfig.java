@@ -16,14 +16,17 @@ public class CorsConfig {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of(
+        // ============================================================
+        // ALLOWED ORIGINS
+        // ============================================================
+        configuration.setAllowedOriginPatterns(List.of(
                 "https://se-rentcar.vercel.app",
-                "http://localhost:5173",
-                "http://localhost:5174",
-                "http://localhost:5175",
-                "http://localhost:3000"
+                "http://localhost:*"
         ));
 
+        // ============================================================
+        // ALLOWED METHODS
+        // ============================================================
         configuration.setAllowedMethods(List.of(
                 "GET",
                 "POST",
@@ -33,15 +36,33 @@ public class CorsConfig {
                 "OPTIONS"
         ));
 
-        configuration.setAllowedHeaders(List.of("*"));
+        // ============================================================
+        // ALLOWED HEADERS
+        // ============================================================
+        configuration.setAllowedHeaders(List.of(
+                "*"
+        ));
 
+        // ============================================================
+        // EXPOSED HEADERS
+        // ============================================================
         configuration.setExposedHeaders(List.of(
                 "Authorization"
         ));
 
+        // ============================================================
+        // CREDENTIALS
+        // ============================================================
         configuration.setAllowCredentials(true);
+
+        // ============================================================
+        // CACHE PREFLIGHT
+        // ============================================================
         configuration.setMaxAge(3600L);
 
+        // ============================================================
+        // REGISTER CORS CONFIGURATION
+        // ============================================================
         UrlBasedCorsConfigurationSource source =
                 new UrlBasedCorsConfigurationSource();
 
