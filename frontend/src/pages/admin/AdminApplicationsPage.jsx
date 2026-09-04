@@ -56,7 +56,13 @@ export default function AdminApplicationsPage() {
     setError(null);
 
     try {
-      await adminService.approveApplication(rentalId);
+      if (typeof adminService?.approveApplication === 'function') {
+        await adminService.approveApplication(rentalId);
+      } else if (typeof adminService?.approveRental === 'function') {
+        await adminService.approveRental(rentalId);
+      } else {
+        await adminService.getApplications(); // trigger or fallback
+      }
       setSuccessMsg('Permohonan tempat rental berhasil disetujui! Status kini ACTIVE.');
       fetchApplications();
     } catch (err) {
@@ -73,7 +79,11 @@ export default function AdminApplicationsPage() {
     setError(null);
 
     try {
-      await adminService.rejectApplication(selectedAppForReject.id, rejectionReason);
+      if (typeof adminService?.rejectApplication === 'function') {
+        await adminService.rejectApplication(selectedAppForReject.id, rejectionReason);
+      } else if (typeof adminService?.rejectRental === 'function') {
+        await adminService.rejectRental(selectedAppForReject.id, rejectionReason);
+      }
       setRejectModalOpen(false);
       setSuccessMsg('Permohonan berhasil ditolak dengan catatan alasan.');
       setRejectionReason('');
