@@ -19,18 +19,18 @@ export default function RatingStars({ rating = 0, count, max = 5, size = 'sm', s
             className={`${sizeClasses[size] || sizeClasses.sm} ${
               i < Math.round(validRating)
                 ? 'text-amber-400 fill-amber-400'
-                : 'text-slate-600 fill-transparent'
+                : 'text-slate-200 fill-slate-100'
             }`}
           />
         ))}
       </div>
       {showNumber && (
-        <span className="text-xs font-semibold text-slate-300">
+        <span className="text-xs font-bold text-ink-primary">
           {validRating > 0 ? validRating.toFixed(1) : 'Baru'}
         </span>
       )}
       {count !== undefined && (
-        <span className="text-xs text-slate-400">({count} ulasan)</span>
+        <span className="text-xs text-ink-secondary">({count})</span>
       )}
     </div>
   );

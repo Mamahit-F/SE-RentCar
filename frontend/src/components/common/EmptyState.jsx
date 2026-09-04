@@ -3,15 +3,15 @@ import { PackageOpen } from 'lucide-react';
 
 export default function EmptyState({ icon: Icon = PackageOpen, title, description, action }) {
   return (
-    <div className="flex flex-col items-center justify-center p-12 text-center bg-slate-900/40 border border-slate-800 rounded-2xl space-y-4">
-      <div className="p-3 bg-slate-800/80 rounded-2xl text-slate-400">
-        <Icon className="h-8 w-8" />
+    <div className="flex flex-col items-center justify-center p-12 text-center bg-white border border-warm-300 rounded-3xl space-y-4 shadow-subtle">
+      <div className="p-4 bg-warm-100 rounded-2xl text-midnight-900 border border-warm-200">
+        <Icon className="h-8 w-8 stroke-[1.5]" />
       </div>
       <div className="space-y-1 max-w-sm">
-        <h4 className="text-base font-bold text-white">{title}</h4>
-        {description && <p className="text-xs text-slate-400">{description}</p>}
+        <h4 className="text-base font-bold text-ink-primary">{title}</h4>
+        {description && <p className="text-xs text-ink-secondary leading-relaxed">{description}</p>}
       </div>
-      {action && <div>{action}</div>}
+      {action && <div className="pt-2">{action}</div>}
     </div>
   );
 }

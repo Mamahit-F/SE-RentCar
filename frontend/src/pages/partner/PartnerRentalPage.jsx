@@ -86,49 +86,49 @@ export default function PartnerRentalPage() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-[calc(100vh-4rem)]">
+    <div className="flex flex-col md:flex-row min-h-[calc(100vh-5rem)]">
       <Sidebar />
 
-      <main className="flex-1 p-6 sm:p-8 space-y-6 overflow-y-auto max-w-4xl">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <main className="flex-1 p-6 sm:p-10 space-y-6 overflow-y-auto max-w-4xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-warm-200 pb-6">
           <div className="space-y-1">
-            <h1 className="text-2xl font-bold text-white tracking-tight">
+            <h1 className="text-2xl font-black text-ink-primary tracking-tight">
               {rental ? 'Kelola Profil Tempat Rental' : 'Pengajuan Tempat Rental Baru'}
             </h1>
-            <p className="text-xs text-slate-400">
-              Lengkapi informasi usaha, alamat operasional, dan dokumen perizinan Anda
+            <p className="text-xs text-ink-secondary">
+              Lengkapi informasi usaha, alamat operasional, dan berkas perizinan NIB Anda
             </p>
           </div>
           {rental && <Badge status={rental.status} />}
         </div>
 
         {rental?.status === 'REJECTED' && (
-          <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs space-y-1">
-            <p className="font-bold text-rose-200">Catatan Penolakan dari Admin:</p>
+          <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs space-y-1 shadow-subtle">
+            <p className="font-bold">Catatan Penolakan dari Admin:</p>
             <p>{rental.rejectionReason || 'Mohon lengkapi izin usaha dan alamat operasional yang valid.'}</p>
           </div>
         )}
 
         {successMsg && (
-          <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-            <span>{successMsg}</span>
+          <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2 shadow-subtle">
+            <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+            <span className="font-semibold">{successMsg}</span>
           </div>
         )}
 
         {error && (
-          <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-center gap-2">
-            <AlertCircle className="h-4 w-4 text-rose-400 shrink-0" />
-            <span>{error}</span>
+          <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2 shadow-subtle">
+            <AlertCircle className="h-4 w-4 text-rose-600 shrink-0" />
+            <span className="font-semibold">{error}</span>
           </div>
         )}
 
         {loading ? (
           <LoadingSpinner text="Memuat profil rental..." />
         ) : (
-          <form onSubmit={handleSubmit} className="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
+          <form onSubmit={handleSubmit} className="bg-white border border-warm-300 rounded-3xl p-6 sm:p-8 shadow-subtle space-y-5">
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300">Nama Tempat Rental *</label>
+              <label className="text-xs font-bold text-ink-primary">Nama Tempat Rental *</label>
               <input
                 type="text"
                 name="name"
@@ -136,25 +136,25 @@ export default function PartnerRentalPage() {
                 placeholder="Contoh: Nusantara Jaya Rent Car"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 transition"
+                className="w-full bg-warm-50 border border-warm-300 rounded-xl px-4 py-2.5 text-xs text-ink-primary font-medium focus:outline-none focus:border-midnight-900 focus:bg-white transition"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300">Deskripsi Rental & Layanan</label>
+              <label className="text-xs font-bold text-ink-primary">Deskripsi Rental & Layanan</label>
               <textarea
                 name="description"
                 rows={3}
-                placeholder="Jelaskan jenis armada, kelebihan layanan, sistem lepas kunci/supir..."
+                placeholder="Jelaskan jenis armada, kelebihan layanan, sistem lepas kunci / dengan supir..."
                 value={formData.description}
                 onChange={handleChange}
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-blue-500 transition"
+                className="w-full bg-warm-50 border border-warm-300 rounded-xl p-3 text-xs text-ink-primary font-medium focus:outline-none focus:border-midnight-900 focus:bg-white transition"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-300">Kota Operasional *</label>
+                <label className="text-xs font-bold text-ink-primary">Kota Operasional *</label>
                 <input
                   type="text"
                   name="city"
@@ -162,12 +162,12 @@ export default function PartnerRentalPage() {
                   placeholder="Contoh: Jakarta Selatan"
                   value={formData.city}
                   onChange={handleChange}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 transition"
+                  className="w-full bg-warm-50 border border-warm-300 rounded-xl px-4 py-2.5 text-xs text-ink-primary font-medium focus:outline-none focus:border-midnight-900 focus:bg-white transition"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-300">Provinsi *</label>
+                <label className="text-xs font-bold text-ink-primary">Provinsi *</label>
                 <input
                   type="text"
                   name="province"
@@ -175,13 +175,13 @@ export default function PartnerRentalPage() {
                   placeholder="Contoh: DKI Jakarta"
                   value={formData.province}
                   onChange={handleChange}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 transition"
+                  className="w-full bg-warm-50 border border-warm-300 rounded-xl px-4 py-2.5 text-xs text-ink-primary font-medium focus:outline-none focus:border-midnight-900 focus:bg-white transition"
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300">Alamat Lengkap Kantor / Garasi *</label>
+              <label className="text-xs font-bold text-ink-primary">Alamat Lengkap Kantor / Garasi *</label>
               <input
                 type="text"
                 name="address"
@@ -189,58 +189,58 @@ export default function PartnerRentalPage() {
                 placeholder="Jl. Raya Utama No. 123"
                 value={formData.address}
                 onChange={handleChange}
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 transition"
+                className="w-full bg-warm-50 border border-warm-300 rounded-xl px-4 py-2.5 text-xs text-ink-primary font-medium focus:outline-none focus:border-midnight-900 focus:bg-white transition"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-300">Nomor Telepon CS / Kantor</label>
+                <label className="text-xs font-bold text-ink-primary">Nomor Telepon CS / Kantor</label>
                 <input
                   type="tel"
                   name="phone"
                   placeholder="0217654321"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 transition"
+                  className="w-full bg-warm-50 border border-warm-300 rounded-xl px-4 py-2.5 text-xs text-ink-primary font-medium focus:outline-none focus:border-midnight-900 focus:bg-white transition"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-300">Email Operasional</label>
+                <label className="text-xs font-bold text-ink-primary">Email Operasional</label>
                 <input
                   type="email"
                   name="email"
                   placeholder="cs@nusantararental.com"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 transition"
+                  className="w-full bg-warm-50 border border-warm-300 rounded-xl px-4 py-2.5 text-xs text-ink-primary font-medium focus:outline-none focus:border-midnight-900 focus:bg-white transition"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-900">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t border-warm-200">
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-300">Nomor Izin Usaha (NIB / SIUP)</label>
+                <label className="text-xs font-bold text-ink-primary">Nomor Izin Usaha (NIB / SIUP)</label>
                 <input
                   type="text"
                   name="businessLicense"
                   placeholder="NIB-9120038472910"
                   value={formData.businessLicense}
                   onChange={handleChange}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 transition"
+                  className="w-full bg-warm-50 border border-warm-300 rounded-xl px-4 py-2.5 text-xs text-ink-primary font-medium focus:outline-none focus:border-midnight-900 focus:bg-white transition"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-300">URL Dokumen Legalitas (PDF / Gambar)</label>
+                <label className="text-xs font-bold text-ink-primary">URL Dokumen Legalitas (PDF / Link Gambar)</label>
                 <input
                   type="url"
                   name="documentUrl"
                   placeholder="https://example.com/dokumen-nib.pdf"
                   value={formData.documentUrl}
                   onChange={handleChange}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 transition"
+                  className="w-full bg-warm-50 border border-warm-300 rounded-xl px-4 py-2.5 text-xs text-ink-primary font-medium focus:outline-none focus:border-midnight-900 focus:bg-white transition"
                 />
               </div>
             </div>
@@ -248,7 +248,7 @@ export default function PartnerRentalPage() {
             <button
               type="submit"
               disabled={saveLoading}
-              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-bold text-xs px-6 py-3 rounded-xl shadow-lg transition mt-2"
+              className="inline-flex items-center gap-2 bg-midnight-900 hover:bg-midnight-800 disabled:opacity-50 text-white font-extrabold text-xs px-6 py-3.5 rounded-xl shadow-card transition duration-200 mt-2"
             >
               <Save className="h-4 w-4" />
               {saveLoading ? 'Menyimpan...' : rental ? 'Simpan Perubahan' : 'Ajukan Tempat Rental'}

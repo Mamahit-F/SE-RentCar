@@ -34,10 +34,10 @@ export default function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col selection:bg-blue-600 selection:text-white font-sans antialiased">
+        <div className="min-h-screen bg-warm text-ink-primary flex flex-col selection:bg-lime selection:text-ink-primary font-sans antialiased">
           <Navbar />
           
-          <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="flex-1 w-full">
             <Routes>
               {/* Public Routes */}
               <Route path="/" element={<LandingPage />} />

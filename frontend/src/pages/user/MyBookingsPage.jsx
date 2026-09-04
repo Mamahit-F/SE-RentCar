@@ -10,12 +10,12 @@ import {
   XCircle, 
   AlertCircle,
   Clock,
-  ArrowRight
+  ArrowRight,
+  Sparkles
 } from 'lucide-react';
 import { bookingService, paymentService, reviewService } from '../../services/api';
 import Badge from '../../components/common/Badge';
 import Modal from '../../components/common/Modal';
-import RatingStars from '../../components/common/RatingStars';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import EmptyState from '../../components/common/EmptyState';
 
@@ -65,7 +65,7 @@ export default function MyBookingsPage() {
         method: payMethod,
       });
       setPayModalOpen(false);
-      setSuccessMsg('Pembayaran simulasi berhasil! Pesanan Anda kini terkonfirmasi.');
+      setSuccessMsg('Pembayaran simulasi berhasil diverifikasi! Status pesanan kini CONFIRMED.');
       fetchMyBookings();
     } catch (err) {
       setError(err?.message || 'Simulasi pembayaran gagal');
@@ -101,7 +101,7 @@ export default function MyBookingsPage() {
         comment: comment,
       });
       setReviewModalOpen(false);
-      setSuccessMsg('Ulasan berhasil dikirim! Terima kasih.');
+      setSuccessMsg('Ulasan berhasil dikirim! Terima kasih atas masukan Anda.');
       setComment('');
       fetchMyBookings();
     } catch (err) {
@@ -116,41 +116,43 @@ export default function MyBookingsPage() {
   };
 
   return (
-    <div className="space-y-8 py-6">
-      <div className="space-y-1">
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Pesanan Sewa Saya</h1>
-        <p className="text-xs sm:text-sm text-slate-400">Pantau status pemesanan rental mobil, lakukan pembayaran, dan beri ulasan</p>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+      
+      {/* Header */}
+      <div className="space-y-1 border-b border-warm-200 pb-6">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-ink-primary tracking-tight">Pesanan Sewa Saya</h1>
+        <p className="text-xs text-ink-secondary">Pantau status pemesanan kendaraan, lakukan pembayaran, dan beri ulasan mitra</p>
       </div>
 
       {successMsg && (
-        <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs flex items-center justify-between">
+        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center justify-between shadow-subtle">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-            <span>{successMsg}</span>
+            <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+            <span className="font-semibold">{successMsg}</span>
           </div>
-          <button onClick={() => setSuccessMsg(null)} className="text-xs hover:underline">Tutup</button>
+          <button onClick={() => setSuccessMsg(null)} className="text-xs font-bold hover:underline">Tutup</button>
         </div>
       )}
 
       {error && (
-        <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-center justify-between">
+        <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center justify-between shadow-subtle">
           <div className="flex items-center gap-2">
-            <AlertCircle className="h-4 w-4 text-rose-400 shrink-0" />
-            <span>{error}</span>
+            <AlertCircle className="h-4 w-4 text-rose-600 shrink-0" />
+            <span className="font-semibold">{error}</span>
           </div>
-          <button onClick={() => setError(null)} className="text-xs hover:underline">Tutup</button>
+          <button onClick={() => setError(null)} className="text-xs font-bold hover:underline">Tutup</button>
         </div>
       )}
 
       {loading ? (
-        <LoadingSpinner text="Memuat daftar pesanan Anda..." />
+        <LoadingSpinner text="Memuat riwayat pesanan Anda..." />
       ) : bookings.length === 0 ? (
         <EmptyState
           icon={Calendar}
-          title="Belum Ada Pesanan"
-          description="Anda belum memiliki riwayat pesanan rental mobil."
+          title="Belum Ada Riwayat Pesanan"
+          description="Anda belum memesan kendaraan rental. Temukan mobil impian untuk perjalanan Anda sekarang."
           action={
-            <Link to="/cars" className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md">
+            <Link to="/cars" className="inline-flex items-center gap-2 bg-midnight-900 hover:bg-midnight-800 text-white text-xs font-bold px-5 py-3 rounded-xl shadow-card transition">
               Cari & Sewa Mobil <ArrowRight className="h-4 w-4" />
             </Link>
           }
@@ -158,20 +160,27 @@ export default function MyBookingsPage() {
       ) : (
         <div className="space-y-4">
           {bookings.map((b) => (
-            <div key={b.id} className="bg-slate-950 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xl space-y-4 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div 
+              key={b.id} 
+              className="bg-white border border-warm-300 rounded-3xl p-6 shadow-subtle hover:shadow-card transition-all duration-200 space-y-4 flex flex-col md:flex-row md:items-center justify-between gap-6"
+            >
               <div className="space-y-3 flex-1">
+                {/* Status bar */}
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-xs font-mono font-bold text-slate-400">#BOOK-{b.id}</span>
+                  <span className="text-xs font-mono font-bold text-midnight-900 bg-warm-100 px-2.5 py-0.5 rounded-lg border border-warm-200">
+                    #BOOK-{b.id}
+                  </span>
                   <Badge status={b.status} />
                   {b.payment?.status === 'SUCCESS' && (
-                    <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                    <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
                       <CreditCard className="h-3 w-3" /> LUNAS ({b.payment?.method})
                     </span>
                   )}
                 </div>
 
+                {/* Car Thumbnail & Details */}
                 <div className="flex items-start gap-4">
-                  <div className="h-16 w-24 bg-slate-900 rounded-xl overflow-hidden shrink-0 border border-slate-800">
+                  <div className="h-20 w-28 bg-warm-100 rounded-2xl overflow-hidden shrink-0 border border-warm-200">
                     <img
                       src={b.car?.imageUrl || 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=400&q=80'}
                       alt={b.car?.model}
@@ -179,24 +188,26 @@ export default function MyBookingsPage() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <h3 className="text-base font-bold text-white">{b.car?.brand} {b.car?.model}</h3>
-                    <p className="text-xs text-slate-400 flex items-center gap-1">
-                      <Building2 className="h-3.5 w-3.5 text-slate-500" />
+                    <h3 className="text-base font-extrabold text-ink-primary">
+                      {b.car?.brand} {b.car?.model}
+                    </h3>
+                    <p className="text-xs text-ink-secondary flex items-center gap-1.5 font-medium">
+                      <Building2 className="h-3.5 w-3.5 text-midnight-900 shrink-0" />
                       {b.rentalPlace?.name} ({b.rentalPlace?.city})
                     </p>
-                    <p className="text-xs text-slate-400 flex items-center gap-1">
-                      <Clock className="h-3.5 w-3.5 text-slate-500" />
-                      {b.startDate} s/d {b.endDate} ({b.durationDays} Hari)
+                    <p className="text-xs text-ink-secondary flex items-center gap-1.5">
+                      <Clock className="h-3.5 w-3.5 text-ink-muted shrink-0" />
+                      {b.startDate} s/d {b.endDate} <span className="font-bold text-ink-primary">({b.durationDays} Hari)</span>
                     </p>
                   </div>
                 </div>
               </div>
 
               {/* Price & Action Buttons */}
-              <div className="flex flex-col sm:flex-row md:flex-col items-start md:items-end justify-between gap-3 pt-3 md:pt-0 border-t md:border-t-0 border-slate-900">
+              <div className="flex flex-col sm:flex-row md:flex-col items-start md:items-end justify-between gap-3 pt-3 md:pt-0 border-t md:border-t-0 border-warm-200">
                 <div className="text-left md:text-right">
-                  <span className="text-xs text-slate-400 block">Total Tagihan</span>
-                  <p className="text-lg font-extrabold text-emerald-400">{formatRupiah(b.totalPrice)}</p>
+                  <span className="text-[11px] font-bold text-ink-secondary uppercase tracking-wider block">Total Tagihan</span>
+                  <p className="text-xl font-black text-midnight-900">{formatRupiah(b.totalPrice)}</p>
                 </div>
 
                 <div className="flex flex-wrap gap-2 w-full sm:w-auto">
@@ -207,14 +218,14 @@ export default function MyBookingsPage() {
                           setSelectedBookingForPay(b);
                           setPayModalOpen(true);
                         }}
-                        className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow-md transition"
+                        className="inline-flex items-center gap-1.5 bg-midnight-900 hover:bg-midnight-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-subtle transition"
                       >
                         <CreditCard className="h-3.5 w-3.5" />
                         Bayar Sekarang
                       </button>
                       <button
                         onClick={() => handleCancelBooking(b.id)}
-                        className="text-xs font-semibold text-rose-400 hover:bg-rose-500/10 px-3 py-2 rounded-xl border border-rose-500/20 transition"
+                        className="text-xs font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 px-3.5 py-2.5 rounded-xl border border-rose-200 transition"
                       >
                         Batalkan
                       </button>
@@ -227,7 +238,7 @@ export default function MyBookingsPage() {
                         setSelectedBookingForReview(b);
                         setReviewModalOpen(true);
                       }}
-                      className="inline-flex items-center gap-1.5 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow-md transition"
+                      className="inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-subtle transition"
                     >
                       <Star className="h-3.5 w-3.5" />
                       Beri Ulasan
@@ -235,8 +246,8 @@ export default function MyBookingsPage() {
                   )}
 
                   {b.review && (
-                    <div className="flex items-center gap-1 text-xs text-amber-400 font-semibold bg-amber-500/10 px-3 py-1.5 rounded-xl border border-amber-500/20">
-                      <Star className="h-3.5 w-3.5 fill-amber-400" />
+                    <div className="flex items-center gap-1.5 text-xs text-amber-800 font-bold bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200">
+                      <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                       Sudah Diulas ({b.review.rating}/5)
                     </div>
                   )}
@@ -255,41 +266,41 @@ export default function MyBookingsPage() {
       >
         {selectedBookingForPay && (
           <form onSubmit={handleSimulatePayment} className="space-y-4">
-            <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2 text-xs">
-              <div className="flex justify-between text-slate-400">
-                <span>ID Pesanan:</span>
-                <span className="font-mono text-white font-bold">#BOOK-{selectedBookingForPay.id}</span>
+            <div className="bg-warm-50 p-4 rounded-2xl border border-warm-200 space-y-2 text-xs">
+              <div className="flex justify-between text-ink-secondary">
+                <span>ID Pemesanan:</span>
+                <span className="font-mono text-ink-primary font-bold">#BOOK-{selectedBookingForPay.id}</span>
               </div>
-              <div className="flex justify-between text-slate-400">
+              <div className="flex justify-between text-ink-secondary">
                 <span>Mobil:</span>
-                <span className="text-white font-medium">{selectedBookingForPay.car?.brand} {selectedBookingForPay.car?.model}</span>
+                <span className="text-ink-primary font-bold">{selectedBookingForPay.car?.brand} {selectedBookingForPay.car?.model}</span>
               </div>
-              <div className="flex justify-between text-slate-400">
+              <div className="flex justify-between text-ink-secondary">
                 <span>Durasi:</span>
-                <span className="text-white">{selectedBookingForPay.durationDays} Hari</span>
+                <span className="text-ink-primary font-bold">{selectedBookingForPay.durationDays} Hari</span>
               </div>
-              <div className="pt-2 border-t border-slate-800 flex justify-between text-sm font-bold">
-                <span className="text-white">Jumlah Pembayaran:</span>
-                <span className="text-emerald-400">{formatRupiah(selectedBookingForPay.totalPrice)}</span>
+              <div className="pt-2 border-t border-warm-200 flex justify-between text-sm font-black">
+                <span className="text-ink-primary">Jumlah Tagihan:</span>
+                <span className="text-midnight-900">{formatRupiah(selectedBookingForPay.totalPrice)}</span>
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-slate-300">Pilih Metode Pembayaran</label>
+              <label className="text-xs font-bold text-ink-primary">Pilih Metode Pembayaran</label>
               <div className="grid grid-cols-3 gap-2">
                 {[
                   { id: 'TRANSFER', label: 'Transfer Bank' },
                   { id: 'E_WALLET', label: 'E-Wallet' },
-                  { id: 'COD', label: 'Bayar Tunai (COD)' },
+                  { id: 'COD', label: 'Bayar Tunai' },
                 ].map((m) => (
                   <button
                     key={m.id}
                     type="button"
                     onClick={() => setPayMethod(m.id)}
-                    className={`p-3 rounded-xl text-xs font-semibold border text-center transition ${
+                    className={`p-3 rounded-xl text-xs font-bold border text-center transition ${
                       payMethod === m.id
-                        ? 'bg-blue-600 text-white border-blue-500 shadow-md'
-                        : 'bg-slate-950 text-slate-400 border-slate-800 hover:border-slate-700'
+                        ? 'bg-midnight-900 text-white border-midnight-900 shadow-subtle'
+                        : 'bg-warm-50 text-ink-secondary border-warm-200 hover:border-warm-300'
                     }`}
                   >
                     {m.label}
@@ -298,14 +309,14 @@ export default function MyBookingsPage() {
               </div>
             </div>
 
-            <p className="text-[11px] text-slate-400 bg-blue-500/10 p-3 rounded-xl border border-blue-500/20">
-              💡 Ini adalah simulasi pembayaran untuk keperluan tugas akhir. Mengklik tombol di bawah akan langsung memvalidasi pembayaran dan mengubah status booking menjadi <strong>CONFIRMED</strong>.
+            <p className="text-[11px] text-ink-secondary bg-warm-100 p-3 rounded-xl border border-warm-200 leading-relaxed">
+              💡 Ini adalah simulasi transaksi pembayaran. Klik tombol di bawah untuk menyelesaikan simulasi dan mengubah status pesanan menjadi <strong>CONFIRMED</strong>.
             </p>
 
             <button
               type="submit"
               disabled={actionLoading}
-              className="w-full inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-bold text-xs py-3 rounded-xl shadow-lg transition"
+              className="w-full inline-flex items-center justify-center gap-2 bg-midnight-900 hover:bg-midnight-800 disabled:opacity-50 text-white font-extrabold text-xs py-3.5 rounded-xl shadow-card transition"
             >
               <CheckCircle2 className="h-4 w-4" />
               {actionLoading ? 'Memproses...' : `Simulasikan Bayar ${formatRupiah(selectedBookingForPay.totalPrice)}`}
@@ -322,13 +333,13 @@ export default function MyBookingsPage() {
       >
         {selectedBookingForReview && (
           <form onSubmit={handleSubmitReview} className="space-y-4">
-            <div className="space-y-1 text-xs text-slate-400">
-              <p>Tempat Rental: <span className="font-bold text-white">{selectedBookingForReview.rentalPlace?.name}</span></p>
-              <p>Mobil: <span className="font-bold text-white">{selectedBookingForReview.car?.brand} {selectedBookingForReview.car?.model}</span></p>
+            <div className="space-y-1 text-xs text-ink-secondary bg-warm-50 p-3 rounded-xl border border-warm-200">
+              <p>Tempat Rental: <span className="font-bold text-ink-primary">{selectedBookingForReview.rentalPlace?.name}</span></p>
+              <p>Mobil: <span className="font-bold text-ink-primary">{selectedBookingForReview.car?.brand} {selectedBookingForReview.car?.model}</span></p>
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-slate-300">Rating Kepuasan (1 - 5 Bintang)</label>
+              <label className="text-xs font-bold text-ink-primary">Rating Kepuasan (1 - 5 Bintang)</label>
               <div className="flex gap-2">
                 {[1, 2, 3, 4, 5].map((num) => (
                   <button
@@ -337,11 +348,11 @@ export default function MyBookingsPage() {
                     onClick={() => setRating(num)}
                     className={`flex-1 py-2.5 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-1 ${
                       rating >= num
-                        ? 'bg-amber-500/20 border-amber-500/40 text-amber-400'
-                        : 'bg-slate-950 border-slate-800 text-slate-500'
+                        ? 'bg-amber-50 border-amber-300 text-amber-900'
+                        : 'bg-warm-50 border-warm-200 text-ink-muted'
                     }`}
                   >
-                    <Star className={`h-4 w-4 ${rating >= num ? 'fill-amber-400' : ''}`} />
+                    <Star className={`h-4 w-4 ${rating >= num ? 'fill-amber-400 text-amber-400' : ''}`} />
                     {num}
                   </button>
                 ))}
@@ -349,21 +360,21 @@ export default function MyBookingsPage() {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300">Komentar & Pengalaman Sewa</label>
+              <label className="text-xs font-bold text-ink-primary">Komentar & Pengalaman Sewa</label>
               <textarea
                 rows={4}
                 required
-                placeholder="Ceritakan kondisi mobil, keramahan staf rental, dan kenyamanan perjalanan Anda..."
+                placeholder="Ceritakan kondisi mobil, kebersihan unit, dan keramahan staf rental..."
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition"
+                className="w-full bg-warm-50 border border-warm-300 rounded-xl p-3 text-xs text-ink-primary placeholder-ink-muted focus:outline-none focus:border-midnight-900 focus:bg-white transition"
               />
             </div>
 
             <button
               type="submit"
               disabled={actionLoading}
-              className="w-full inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-bold text-xs py-3 rounded-xl shadow-lg transition"
+              className="w-full inline-flex items-center justify-center gap-2 bg-midnight-900 hover:bg-midnight-800 disabled:opacity-50 text-white font-extrabold text-xs py-3.5 rounded-xl shadow-card transition"
             >
               <Star className="h-4 w-4" />
               {actionLoading ? 'Mengirim...' : 'Kirim Ulasan Sekarang'}

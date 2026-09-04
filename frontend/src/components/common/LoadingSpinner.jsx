@@ -10,8 +10,8 @@ export default function LoadingSpinner({ text = 'Memuat data...', size = 'md' })
 
   return (
     <div className="flex flex-col items-center justify-center p-8 space-y-3">
-      <Loader2 className={`${sizeClasses[size] || sizeClasses.md} text-blue-500 animate-spin`} />
-      {text && <p className="text-xs font-medium text-slate-400">{text}</p>}
+      <Loader2 className={`${sizeClasses[size] || sizeClasses.md} text-midnight-900 animate-spin`} />
+      {text && <p className="text-xs font-semibold text-ink-secondary">{text}</p>}
     </div>
   );
 }

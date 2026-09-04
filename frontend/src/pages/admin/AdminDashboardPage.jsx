@@ -6,11 +6,11 @@ import {
   Car, 
   Calendar, 
   FileCheck, 
-  ShieldCheck, 
   Clock, 
-  AlertCircle, 
   ArrowRight,
-  TrendingUp
+  ShieldCheck,
+  TrendingUp,
+  AlertCircle
 } from 'lucide-react';
 import { adminService } from '../../services/api';
 import Sidebar from '../../components/common/Sidebar';
@@ -27,7 +27,7 @@ export default function AdminDashboardPage() {
         const res = await adminService.getDashboardStats();
         setStats(res?.data || null);
       } catch (err) {
-        console.error('Error fetching admin dashboard stats:', err);
+        console.error('Error fetching admin stats:', err);
       } finally {
         setLoading(false);
       }
@@ -37,129 +37,149 @@ export default function AdminDashboardPage() {
   }, []);
 
   return (
-    <div className="flex flex-col md:flex-row min-h-[calc(100vh-4rem)]">
+    <div className="flex flex-col md:flex-row min-h-[calc(100vh-5rem)]">
       <Sidebar />
 
-      <main className="flex-1 p-6 sm:p-8 space-y-8 overflow-y-auto">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-bold text-white tracking-tight">Panel Kontrol Administrator</h1>
-          <p className="text-xs text-slate-400">Ringkasan analitik dan pengawasan sistem platform AutoPartner</p>
+      <main className="flex-1 p-6 sm:p-10 space-y-8 overflow-y-auto">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-warm-200 pb-6">
+          <div className="space-y-1">
+            <h1 className="text-2xl font-black text-ink-primary tracking-tight">Pusat Kontrol Administrator</h1>
+            <p className="text-xs text-ink-secondary">Ringkasan operasional platform kemitraan rental mobil dan verifikasi izin mitra</p>
+          </div>
+
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-900 text-xs font-bold">
+            <ShieldCheck className="h-4 w-4 text-amber-600" /> Mode Super Admin
+          </div>
         </div>
 
-        {/* Pending Verification Notice */}
+        {/* Verification Alert Banner */}
         {stats?.pendingApplications > 0 && (
-          <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-amber-500/20 text-amber-400">
-                <Clock className="h-6 w-6" />
+          <div className="bg-amber-50 border border-amber-300 rounded-3xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-amber-900 shadow-subtle">
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-amber-200/60 rounded-xl text-amber-900 shrink-0 mt-0.5">
+                <Clock className="h-5 w-5" />
               </div>
-              <div>
-                <h3 className="text-sm font-bold text-white">
-                  Terdapat {stats.pendingApplications} Pengajuan Mitra Rental Menunggu Verifikasi
-                </h3>
-                <p className="text-xs text-slate-300 mt-0.5">
-                  Tinjau berkas perizinan usaha dan lokasi garasi untuk mengaktifkan mitra rental.
+              <div className="space-y-0.5">
+                <h4 className="text-sm font-extrabold text-amber-950">
+                  {stats.pendingApplications} Permohonan Tempat Rental Menunggu Verifikasi
+                </h4>
+                <p className="text-xs text-amber-800">
+                  Segera periksa kelengkapan NIB dan keabsahan dokumen izin usaha mitra rental baru.
                 </p>
               </div>
             </div>
+
             <Link
               to="/admin/applications"
-              className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-4 py-2.5 rounded-xl shadow-md transition shrink-0"
+              className="inline-flex items-center gap-2 bg-midnight-900 hover:bg-midnight-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-card transition shrink-0"
             >
-              Verifikasi Sekarang <ArrowRight className="h-4 w-4" />
+              Tinjau Permohonan <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
         )}
 
-        {/* Stats Counters */}
+        {/* Top KPI Grid */}
         {loading ? (
-          <LoadingSpinner text="Memuat metrik platform..." />
+          <LoadingSpinner text="Memuat statistik platform..." />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            <div className="bg-slate-950 border border-slate-800 p-5 rounded-2xl space-y-3 shadow-lg">
-              <div className="flex items-center justify-between text-slate-400 text-xs font-semibold">
+            <div className="bg-white border border-warm-300 p-6 rounded-3xl space-y-3 shadow-subtle">
+              <div className="flex items-center justify-between text-ink-secondary text-xs font-bold">
                 <span>Total Pengguna</span>
-                <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400">
+                <div className="p-2.5 rounded-xl bg-warm-100 text-midnight-900">
                   <Users className="h-4 w-4" />
                 </div>
               </div>
-              <p className="text-2xl font-extrabold text-white">{stats?.totalUsers || 0}</p>
-              <p className="text-[11px] text-slate-400">Customer terdaftar aktif</p>
+              <p className="text-3xl font-black text-ink-primary">{stats?.totalUsers || 0}</p>
+              <p className="text-[11px] text-ink-secondary">Pelanggan & Mitra terdaftar</p>
             </div>
 
-            <div className="bg-slate-950 border border-slate-800 p-5 rounded-2xl space-y-3 shadow-lg">
-              <div className="flex items-center justify-between text-slate-400 text-xs font-semibold">
-                <span>Mitra Rental</span>
-                <div className="p-2 rounded-xl bg-purple-500/10 text-purple-400">
+            <div className="bg-white border border-warm-300 p-6 rounded-3xl space-y-3 shadow-subtle">
+              <div className="flex items-center justify-between text-ink-secondary text-xs font-bold">
+                <span>Tempat Rental</span>
+                <div className="p-2.5 rounded-xl bg-warm-100 text-midnight-900">
                   <Building2 className="h-4 w-4" />
                 </div>
               </div>
-              <p className="text-2xl font-extrabold text-purple-400">{stats?.totalPartners || 0}</p>
-              <p className="text-[11px] text-slate-400">{stats?.activeRentals || 0} rental aktif beroperasi</p>
+              <p className="text-3xl font-black text-ink-primary">{stats?.totalRentals || 0}</p>
+              <p className="text-[11px] text-ink-secondary">{stats?.activeRentals || 0} berstatus aktif</p>
             </div>
 
-            <div className="bg-slate-950 border border-slate-800 p-5 rounded-2xl space-y-3 shadow-lg">
-              <div className="flex items-center justify-between text-slate-400 text-xs font-semibold">
-                <span>Armada Mobil</span>
-                <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400">
+            <div className="bg-white border border-warm-300 p-6 rounded-3xl space-y-3 shadow-subtle">
+              <div className="flex items-center justify-between text-ink-secondary text-xs font-bold">
+                <span>Total Armada Mobil</span>
+                <div className="p-2.5 rounded-xl bg-warm-100 text-midnight-900">
                   <Car className="h-4 w-4" />
                 </div>
               </div>
-              <p className="text-2xl font-extrabold text-emerald-400">{stats?.totalCars || 0}</p>
-              <p className="text-[11px] text-slate-400">Mobil terdaftar di seluruh mitra</p>
+              <p className="text-3xl font-black text-ink-primary">{stats?.totalCars || 0}</p>
+              <p className="text-[11px] text-ink-secondary">{stats?.activeCars || 0} unit aktif di platform</p>
             </div>
 
-            <div className="bg-slate-950 border border-slate-800 p-5 rounded-2xl space-y-3 shadow-lg">
-              <div className="flex items-center justify-between text-slate-400 text-xs font-semibold">
-                <span>Total Transaksi Booking</span>
-                <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400">
+            <div className="bg-white border border-warm-300 p-6 rounded-3xl space-y-3 shadow-subtle">
+              <div className="flex items-center justify-between text-ink-secondary text-xs font-bold">
+                <span>Total Booking Sewa</span>
+                <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-700">
                   <Calendar className="h-4 w-4" />
                 </div>
               </div>
-              <p className="text-2xl font-extrabold text-amber-400">{stats?.totalBookings || 0}</p>
-              <p className="text-[11px] text-slate-400">Pesanan sewa di platform</p>
+              <p className="text-3xl font-black text-emerald-700">{stats?.totalBookings || 0}</p>
+              <p className="text-[11px] text-ink-secondary">Transaksi pemesanan rental</p>
             </div>
           </div>
         )}
 
-        {/* Quick Management Links */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Operational Management Shortcuts */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           <Link
             to="/admin/applications"
-            className="bg-slate-950 border border-slate-800 hover:border-amber-500/50 p-6 rounded-2xl transition space-y-3 group shadow-lg"
+            className="bg-white border border-warm-300 hover:border-midnight-900 p-6 rounded-3xl transition-all duration-200 space-y-3 group shadow-subtle hover:shadow-card"
           >
-            <div className="p-3 bg-amber-500/10 text-amber-400 rounded-xl w-fit group-hover:scale-110 transition">
-              <FileCheck className="h-6 w-6" />
+            <div className="p-3 bg-amber-50 text-amber-800 rounded-2xl w-fit group-hover:scale-105 transition">
+              <FileCheck className="h-6 w-6 stroke-[2]" />
             </div>
-            <h3 className="text-base font-bold text-white group-hover:text-amber-400 transition">Verifikasi Mitra</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Tinjau dokumen legalitas (NIB, SIUP) dan verifikasi tempat rental baru agar dapat beroperasi.
+            <h3 className="text-base font-extrabold text-ink-primary group-hover:text-midnight-900 transition">Verifikasi Mitra</h3>
+            <p className="text-xs text-ink-secondary leading-relaxed">
+              Tinjau permohonan pendaftaran rental baru, cek berkas legalitas, dan berikan persetujuan.
             </p>
           </Link>
 
           <Link
             to="/admin/rentals"
-            className="bg-slate-950 border border-slate-800 hover:border-purple-500/50 p-6 rounded-2xl transition space-y-3 group shadow-lg"
+            className="bg-white border border-warm-300 hover:border-midnight-900 p-6 rounded-3xl transition-all duration-200 space-y-3 group shadow-subtle hover:shadow-card"
           >
-            <div className="p-3 bg-purple-500/10 text-purple-400 rounded-xl w-fit group-hover:scale-110 transition">
-              <Building2 className="h-6 w-6" />
+            <div className="p-3 bg-warm-100 text-midnight-900 rounded-2xl w-fit group-hover:scale-105 transition">
+              <Building2 className="h-6 w-6 stroke-[2]" />
             </div>
-            <h3 className="text-base font-bold text-white group-hover:text-purple-400 transition">Kelola Semua Rental</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Moderasi tempat rental mitra, aktifkan atau nonaktifkan operasional mitra jika melanggar ketentuan.
+            <h3 className="text-base font-extrabold text-ink-primary group-hover:text-midnight-900 transition">Semua Tempat Rental</h3>
+            <p className="text-xs text-ink-secondary leading-relaxed">
+              Moderasi status aktif/nonaktif tempat rental mitra di seluruh kota di Indonesia.
             </p>
           </Link>
 
           <Link
             to="/admin/users"
-            className="bg-slate-950 border border-slate-800 hover:border-blue-500/50 p-6 rounded-2xl transition space-y-3 group shadow-lg"
+            className="bg-white border border-warm-300 hover:border-midnight-900 p-6 rounded-3xl transition-all duration-200 space-y-3 group shadow-subtle hover:shadow-card"
           >
-            <div className="p-3 bg-blue-500/10 text-blue-400 rounded-xl w-fit group-hover:scale-110 transition">
-              <Users className="h-6 w-6" />
+            <div className="p-3 bg-warm-100 text-midnight-900 rounded-2xl w-fit group-hover:scale-105 transition">
+              <Users className="h-6 w-6 stroke-[2]" />
             </div>
-            <h3 className="text-base font-bold text-white group-hover:text-blue-400 transition">Kelola Pengguna</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Daftar seluruh akun pelanggan dan mitra rental serta pengelolaan status akun.
+            <h3 className="text-base font-extrabold text-ink-primary group-hover:text-midnight-900 transition">Kelola Pengguna</h3>
+            <p className="text-xs text-ink-secondary leading-relaxed">
+              Daftar seluruh akun pelanggan, mitra rental, serta pengaturan status aktif pengguna.
+            </p>
+          </Link>
+
+          <Link
+            to="/admin/bookings"
+            className="bg-white border border-warm-300 hover:border-midnight-900 p-6 rounded-3xl transition-all duration-200 space-y-3 group shadow-subtle hover:shadow-card"
+          >
+            <div className="p-3 bg-warm-100 text-midnight-900 rounded-2xl w-fit group-hover:scale-105 transition">
+              <Calendar className="h-6 w-6 stroke-[2]" />
+            </div>
+            <h3 className="text-base font-extrabold text-ink-primary group-hover:text-midnight-900 transition">Audit Booking</h3>
+            <p className="text-xs text-ink-secondary leading-relaxed">
+              Pantau seluruh riwayat transaksi sewa dan kuitansi pembayaran secara real-time.
             </p>
           </Link>
         </div>
