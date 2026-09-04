@@ -209,6 +209,9 @@ export const partnerService = {
   getPartnerBookings: () =>
     apiClient.get('/api/partner/bookings'),
 
+  getMyRentalBookings: () =>
+    apiClient.get('/api/partner/bookings'),
+
   updateBookingStatus: (id, status) =>
     apiClient.put(
       `/api/partner/bookings/${id}/status`,
@@ -227,18 +230,27 @@ export const adminService = {
     apiClient.get('/api/admin/dashboard/stats'),
 
   // Applications
-  getApplications: (status) =>
-    apiClient.get('/api/admin/applications', {
-      params: { status },
-    }),
+  getApplications: (params) => {
+    const queryParams = typeof params === 'string' ? { status: params } : params;
+    return apiClient.get('/api/admin/applications', { params: queryParams });
+  },
+
+  approveApplication: (id) =>
+    apiClient.put(`/api/admin/applications/${id}/approve`),
 
   approveRental: (id) =>
     apiClient.put(`/api/admin/applications/${id}/approve`),
 
+  rejectApplication: (id, rejectionReason) =>
+    apiClient.put(
+      `/api/admin/applications/${id}/reject`,
+      typeof rejectionReason === 'object' ? rejectionReason : { rejectionReason }
+    ),
+
   rejectRental: (id, rejectionReason) =>
     apiClient.put(
       `/api/admin/applications/${id}/reject`,
-      { rejectionReason }
+      typeof rejectionReason === 'object' ? rejectionReason : { rejectionReason }
     ),
 
   // Rentals
@@ -249,8 +261,8 @@ export const adminService = {
     apiClient.put(`/api/admin/rentals/${id}/toggle-status`),
 
   // Users
-  getAllUsers: () =>
-    apiClient.get('/api/admin/users'),
+  getAllUsers: (params) =>
+    apiClient.get('/api/admin/users', { params }),
 
   getUsersByRole: (role) =>
     apiClient.get(`/api/admin/users/role/${role}`),
